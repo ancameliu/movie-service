@@ -1,5 +1,6 @@
 package movie.store.moviesource.rest.controller;
 
+import movie.store.moviesource.rest.controller.exception.InvalidValuesException;
 import movie.store.moviesource.service.MovieService;
 import movie.store.moviesource.service.UserService;
 import movie.store.moviesource.service.dto.MovieDTO;
@@ -50,8 +51,12 @@ public class UserController {
     }
 
     //@PreAuthorize("hasAnyRole('ADMIN')")
-    @RequestMapping(value = "/favoritemovie/{id}", method = RequestMethod.GET)
-    public List<UserDTO> getAllUsersWithFavoriteMovie(@PathVariable Long id) {
-        return userService.getAllUsersWithFavoriteMovie(id);
+    @RequestMapping(value = "/favoritemovie/{movieId}", method = RequestMethod.GET)
+    public List<UserDTO> getAllUsersWithFavoriteMovie(@PathVariable Long movieId) {
+        List<UserDTO> users = userService.getAllUsersWithFavoriteMovie(movieId);
+        if (users.isEmpty()) {
+            throw new InvalidValuesException("No users with this favorite movie found");
+        }
+        return users;
     }
 }

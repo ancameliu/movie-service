@@ -56,7 +56,37 @@ public class MovieService {
     }
 
     @Transactional
-    public List<MovieDTO> findMoviesOfGenreAndRatingHigherThan(Genre genre, double bottomRating) {
+    public List<MovieDTO> findMoviesWithReleaseYear(String releaseYear) {
+        List<Movie> movies =  movieRepository.findByReleaseYear(releaseYear);
+        List<MovieDTO> foundMovies = new ArrayList<>();
+        for (Movie movie : movies) {
+            foundMovies.add(movieEntityToDTO(movie));
+        }
+        return foundMovies;
+    }
+
+    @Transactional
+    public List<MovieDTO> findMoviesOfGenre(String genre) {
+        List<Movie> movies =  movieRepository.findByGenre(genre);
+        List<MovieDTO> foundMovies = new ArrayList<>();
+        for (Movie movie : movies) {
+            foundMovies.add(movieEntityToDTO(movie));
+        }
+        return foundMovies;
+    }
+
+    @Transactional
+    public List<MovieDTO> findMoviesWithDirector(String director) {
+        List<Movie> movies =  movieRepository.findByDirector(director);
+        List<MovieDTO> foundMovies = new ArrayList<>();
+        for (Movie movie : movies) {
+            foundMovies.add(movieEntityToDTO(movie));
+        }
+        return foundMovies;
+    }
+
+    @Transactional
+    public List<MovieDTO> findMoviesOfGenreAndRatingHigherThan(String genre, double bottomRating) {
         if (bottomRating < 0.0 && bottomRating > 10.0) {
             bottomRating = 7.0;
         }
@@ -80,12 +110,6 @@ public class MovieService {
         }
         return foundMovies;
     }
-
-    //get by genre
-
-    //get by director
-
-    //get by release year
 
     @Transactional
     public Long addMovie(AddMovieCommand command) {

@@ -16,8 +16,14 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     List<Movie> findByTitle(String title);
 
+    List<Movie> findByReleaseYear(String releaseYear);
+
+    List<Movie> findByGenre(String genre);
+
+    List<Movie> findByDirector(String director);
+
     @Query("SELECT m FROM Movie m WHERE m.genre = :genre AND m.rating >= :bottomRating")
-    List<Movie> findByGenreAndBottomRating(@Param("genre") Genre genre, @Param("bottomRating") double bottomRating);
+    List<Movie> findByGenreAndBottomRating(@Param("genre") String genre, @Param("bottomRating") double bottomRating);
 
     @Query("SELECT m FROM Movie m WHERE m.rating >= :bottomRating")
     List<Movie> findByRatingHigherThan(@Param("bottomRating") double bottomRating);

@@ -46,8 +46,35 @@ public class MovieController {
         return movies;
     }
 
-    @RequestMapping(value = "/{genre}/ratingsover/{rating}", method = RequestMethod.GET)
-    public List<MovieDTO> findMoviesOfGenreAndRatingHigherThan(@PathVariable Genre genre,
+    @RequestMapping(value = "/year/{year}", method = RequestMethod.GET)
+    public List<MovieDTO> findMoviesByReleaseYear(@PathVariable("year") String releaseYear) {
+        List<MovieDTO> movies = movieService.findMoviesWithReleaseYear(releaseYear);
+        if (movies.isEmpty()) {
+            throw new MovieNotFoundException("No movies with release year " + releaseYear + " found");
+        }
+        return movies;
+    }
+
+    @RequestMapping(value = "/genre/{genre}", method = RequestMethod.GET)
+    public List<MovieDTO> findMoviesByGenre(@PathVariable String genre) {
+        List<MovieDTO> movies = movieService.findMoviesOfGenre(genre);
+        if (movies.isEmpty()) {
+            throw new MovieNotFoundException("No movies of genre " + genre + " found");
+        }
+        return movies;
+    }
+
+    @RequestMapping(value = "/director/{director}", method = RequestMethod.GET)
+    public List<MovieDTO> findMoviesByDirector(@PathVariable String director) {
+        List<MovieDTO> movies = movieService.findMoviesWithDirector(director);
+        if (movies.isEmpty()) {
+            throw new MovieNotFoundException("No movies by director " + director + " found");
+        }
+        return movies;
+    }
+
+    @RequestMapping(value = "/{genre}/ratingover/{rating}", method = RequestMethod.GET)
+    public List<MovieDTO> findMoviesOfGenreAndRatingHigherThan(@PathVariable String genre,
                                                                @PathVariable("rating") double bottomRating) {
         List<MovieDTO> movies = movieService.findMoviesOfGenreAndRatingHigherThan(genre, bottomRating);
         if (movies.isEmpty()) {
@@ -57,7 +84,7 @@ public class MovieController {
         return movies;
     }
 
-    @RequestMapping(value = "/ratingsover/{rating}", method = RequestMethod.GET)
+    @RequestMapping(value = "/ratingover/{rating}", method = RequestMethod.GET)
     public List<MovieDTO> findMoviesOfRatingHigherThan(@PathVariable("rating") double bottomRating) {
         List<MovieDTO> movies = movieService.findMoviesWithRatingHigherThan(bottomRating);
         if (movies.isEmpty()) {
@@ -65,14 +92,6 @@ public class MovieController {
         }
         return movies;
     }
-
-
-    //get by genre
-
-    //get by director
-
-    //get by release year
-
 
     //@PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(method = RequestMethod.POST)

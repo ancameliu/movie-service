@@ -43,10 +43,9 @@ public class Movie {
     }
 
     public synchronized boolean updateRating(double userRating) {
-        double initialRating = rating;
+        double initialRating = formatMovieRating(rating);
         numberOfRatings++;
-        formatMovieRating(userRating);
-        rating = (rating + userRating) / numberOfRatings;
+        rating = formatMovieRating((rating + userRating) / numberOfRatings);
         if (initialRating != rating) {
             return true;
         } else

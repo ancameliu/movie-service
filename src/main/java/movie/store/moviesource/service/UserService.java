@@ -82,7 +82,7 @@ public class UserService {
             favoriteGenres.add(favoriteMovie.getGenre());
         }
         for (Genre genre : favoriteGenres) {
-            userRecommendations.addAll(movieService.findMoviesOfGenreAndRatingHigherThan(genre, bottomRating));
+            userRecommendations.addAll(movieService.findMoviesOfGenreAndRatingHigherThan(genre.name(), bottomRating));
         }
         return userRecommendations;
     }
