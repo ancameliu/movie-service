@@ -7,6 +7,7 @@ import movie.store.moviesource.rest.controller.exception.MovieNotFoundException;
 import movie.store.moviesource.service.MovieService;
 import movie.store.moviesource.service.dto.MovieDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/movies")
+@ComponentScan("movie.store.moviesource.service")
 public class MovieController {
 
     private final MovieService movieService;
@@ -56,7 +58,7 @@ public class MovieController {
     }
 
     @RequestMapping(value = "/genre/{genre}", method = RequestMethod.GET)
-    public List<MovieDTO> findMoviesByGenre(@PathVariable String genre) {
+    public List<MovieDTO> findMoviesByGenre(@PathVariable Genre genre) {
         List<MovieDTO> movies = movieService.findMoviesOfGenre(genre);
         if (movies.isEmpty()) {
             throw new MovieNotFoundException("No movies of genre " + genre + " found");
@@ -74,7 +76,7 @@ public class MovieController {
     }
 
     @RequestMapping(value = "/{genre}/ratingover/{rating}", method = RequestMethod.GET)
-    public List<MovieDTO> findMoviesOfGenreAndRatingHigherThan(@PathVariable String genre,
+    public List<MovieDTO> findMoviesOfGenreAndRatingHigherThan(@PathVariable Genre genre,
                                                                @PathVariable("rating") double bottomRating) {
         List<MovieDTO> movies = movieService.findMoviesOfGenreAndRatingHigherThan(genre, bottomRating);
         if (movies.isEmpty()) {

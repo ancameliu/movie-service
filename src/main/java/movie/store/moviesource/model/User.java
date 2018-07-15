@@ -1,13 +1,15 @@
 package movie.store.moviesource.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @Entity
 @Table(name = "user")
@@ -17,18 +19,29 @@ public class User {
     private Long id;
     private String name;
     private String password;
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "role_assign",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private Set<UserRole> roles = new HashSet<>();
+    private List<UserRole> roles = new LinkedList<>();
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_favorites",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id"))
     private Set<Movie> favoriteMovies;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_rated",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id"))
     private Set<Movie> ratedMovies;
 
-    private User() {}
+    public User() {}
 
-    public User(String name, String password) {
+    public User(Long id, String name, String password) {
+        this.id = id;
         this.name = name;
         this.password = password;
         favoriteMovies = new HashSet<>();
@@ -50,14 +63,27 @@ public class User {
     }
 
     public boolean addFavoriteMovie(Movie movie) {
-        return favoriteMovies.add(movie);
+        if (favoriteMovies.add(movie)) {
+            movie.addFavoriteOfUser(this);
+            return true;
+        } else
+            return false;
     }
 
     public boolean removeFavoriteMovie(Movie movie) {
-        return favoriteMovies.remove(movie);
+        if (favoriteMovies.remove(movie)) {
+            movie.removeFavoriteOfUser(this);
+            return true;
+        } else
+            return false;
     }
 
     public boolean rateMovie(Movie movie, double rating) {
-        return ratedMovies.add(movie) && movie.updateRating(rating);
+        if ((!ratedMovies.contains(movie)) && movie.updateRating(rating)) {
+            ratedMovies.add(movie);
+            movie.addRatedByUser(this);
+            return true;
+        } else
+            return false;
     }
 }

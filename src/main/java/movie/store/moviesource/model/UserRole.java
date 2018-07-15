@@ -2,12 +2,18 @@ package movie.store.moviesource.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "user_role")
 public class UserRole {
@@ -16,13 +22,13 @@ public class UserRole {
     private Long id;
     private String role;
     @ManyToMany(mappedBy = "roles")
-    private Set<User> users = new HashSet<>();
+    private List<User> users = new LinkedList<>();
 
     public void setNewUser(User user) {
         users.add(user);
     }
 
-    private UserRole() {}
+    public UserRole() {}
 
     public UserRole(String role) {
         this.role = role;
@@ -42,7 +48,7 @@ public class UserRole {
     }
 
     @JsonIgnore
-    public Set<User> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 }

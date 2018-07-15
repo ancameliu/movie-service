@@ -6,6 +6,7 @@ import movie.store.moviesource.service.UserService;
 import movie.store.moviesource.service.dto.MovieDTO;
 import movie.store.moviesource.service.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/users")
+@ComponentScan("movie.store.moviesource.service")
 public class UserController {
 
     private final UserService userService;

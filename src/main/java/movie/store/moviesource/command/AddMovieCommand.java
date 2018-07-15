@@ -20,5 +20,4 @@ public class AddMovieCommand {
     private String director;
     private double rating;
     private long numberOfRatings;
-    private String photoId;
 }

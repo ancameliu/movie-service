@@ -12,16 +12,17 @@ import movie.store.moviesource.service.dto.MovieDTO;
 import movie.store.moviesource.service.dto.UserDTO;
 import movie.store.moviesource.service.dto.UserRoleDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@ComponentScan("movie.store.moviesource")
+@EnableJpaRepositories("movie.store.moviesource.repository")
 public class UserService {
     private final UserRepository userRepository;
     private final UserRoleRepository roleRepository;
@@ -37,18 +38,20 @@ public class UserService {
     @Transactional
     public void addFavoriteMovie(Long userId, Long movieId) {
         User user = userRepository.getOne(userId);
-        MovieDTO movieDTO = movieService.findMovieWithId(movieId);
-        if (user.addFavoriteMovie(movieService.movieDTOToEntity(movieDTO))) {
+        Movie movie = movieService.getDirectMovieById(movieId);
+        if (user.addFavoriteMovie(movie)) {
             userRepository.save(user);
+            movieService.saveMovie(movie);
         }
     }
 
     @Transactional
     public void removeFavoriteMovie(Long userId, Long movieId) {
         User user = userRepository.getOne(userId);
-        MovieDTO movieDTO = movieService.findMovieWithId(movieId);
-        if (user.removeFavoriteMovie(movieService.movieDTOToEntity(movieDTO))) {
+        Movie movie = movieService.getDirectMovieById(movieId);
+        if (user.removeFavoriteMovie(movie)) {
             userRepository.save(user);
+            movieService.saveMovie(movie);
         }
     }
 
@@ -58,8 +61,7 @@ public class UserService {
             throw new InvalidValuesException("Rating must be between 0.0 and 10.0");
         }
         User user = userRepository.getOne(userId);
-        MovieDTO movieDTO = movieService.findMovieWithId(movieId);
-        Movie movie = movieService.movieDTOToEntity(movieDTO);
+        Movie movie = movieService.getDirectMovieById(movieId);
         if (user.rateMovie(movie, rating)) {
             userRepository.save(user);
             movieService.saveMovie(movie);
@@ -82,7 +84,7 @@ public class UserService {
             favoriteGenres.add(favoriteMovie.getGenre());
         }
         for (Genre genre : favoriteGenres) {
-            userRecommendations.addAll(movieService.findMoviesOfGenreAndRatingHigherThan(genre.name(), bottomRating));
+            userRecommendations.addAll(movieService.findMoviesOfGenreAndRatingHigherThan(genre, bottomRating));
         }
         return userRecommendations;
     }
@@ -101,12 +103,14 @@ public class UserService {
     public List<UserDTO> getAllUsersWithFavoriteMovie(Long movieId) {
         List<UserDTO> allUsers = getAllUsers();
         MovieDTO movie = movieService.findMovieWithId(movieId);
+        movie.setFavoriteOfUsers(null);
+        movie.setRatedByUsers(null);
         return allUsers.stream().filter(user -> user.getFavoriteMovies().contains(movie))
                 .collect(Collectors.toList());
     }
 
     UserDTO userEntityToDTO(User user) {
-        Set<UserRole> roles = user.getRoles();
+        List<UserRole> roles = user.getRoles();
         Set<UserRoleDTO> roleDTOS = new HashSet<>();
         for (UserRole role : roles) {
             roleDTOS.add(new UserRoleDTO(role.getId(), role.getRole()));
@@ -114,19 +118,26 @@ public class UserService {
         Set<Movie> favoriteMovies = user.getFavoriteMovies();
         Set<MovieDTO> favoriteMovieDTOS = new HashSet<>();
         for (Movie movie : favoriteMovies) {
-            favoriteMovieDTOS.add(movieService.movieEntityToDTO(movie));
+            MovieDTO movieDTO = movieService.movieEntityToDTO(movie);
+            movieDTO.setFavoriteOfUsers(null);
+            movieDTO.setRatedByUsers(null);
+            favoriteMovieDTOS.add(movieDTO);
         }
         Set<Movie> ratedMovies = user.getRatedMovies();
         Set<MovieDTO> ratedMovieDTOS = new HashSet<>();
         for (Movie movie : ratedMovies) {
-            ratedMovieDTOS.add(movieService.movieEntityToDTO(movie));
+            MovieDTO movieDTO = movieService.movieEntityToDTO(movie);
+            movieDTO.setFavoriteOfUsers(null);
+            movieDTO.setRatedByUsers(null);
+            ratedMovieDTOS.add(movieDTO);
         }
         return new UserDTO(user.getId(), user.getName(), user.getPassword(), roleDTOS, favoriteMovieDTOS, ratedMovieDTOS);
     }
 
+    /*
     User userDTOToEntity(UserDTO userDTO) {
         Set<UserRoleDTO> roleDTOS = userDTO.getRoles();
-        Set<UserRole> roles = new HashSet<>();
+        List<UserRole> roles = new LinkedList<>();
         for (UserRoleDTO roleDTO : roleDTOS) {
             roles.add(roleRepository.getOne(roleDTO.getId()));
         }
@@ -142,4 +153,5 @@ public class UserService {
         }
         return new User(userDTO.getId(), userDTO.getName(), userDTO.getPassword(), roles, favoriteMovies, ratedMovies);
     }
+    */
 }

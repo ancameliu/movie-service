@@ -22,5 +22,6 @@ public class MovieDTO {
     private String director;
     private double rating;
     private long numberOfRatings;
-    private String photoId;
+    private Set<User> favoriteOfUsers;
+    private Set<User> ratedByUsers;
 }
