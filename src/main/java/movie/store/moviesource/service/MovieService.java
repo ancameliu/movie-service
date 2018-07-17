@@ -40,7 +40,7 @@ public class MovieService {
         for (Movie movie : movies) {
             MovieDTO movieDTO = movieEntityToDTO(movie);
             movieDTO.setFavoriteOfUsers(null);
-            movieDTO.setFavoriteOfUsers(null);
+            movieDTO.setRatedByUsers(null);
             foundMovies.add(movieDTO);
         }
         return foundMovies;
@@ -51,7 +51,7 @@ public class MovieService {
         Movie movie = movieRepository.getOne(id);
         MovieDTO movieDTO = movieEntityToDTO(movie);
         movieDTO.setFavoriteOfUsers(null);
-        movieDTO.setFavoriteOfUsers(null);
+        movieDTO.setRatedByUsers(null);
         return movieDTO;
     }
 
@@ -62,7 +62,7 @@ public class MovieService {
         for (Movie movie : movies) {
             MovieDTO movieDTO = movieEntityToDTO(movie);
             movieDTO.setFavoriteOfUsers(null);
-            movieDTO.setFavoriteOfUsers(null);
+            movieDTO.setRatedByUsers(null);
             foundMovies.add(movieDTO);
         }
         return foundMovies;
@@ -75,7 +75,7 @@ public class MovieService {
         for (Movie movie : movies) {
             MovieDTO movieDTO = movieEntityToDTO(movie);
             movieDTO.setFavoriteOfUsers(null);
-            movieDTO.setFavoriteOfUsers(null);
+            movieDTO.setRatedByUsers(null);
             foundMovies.add(movieDTO);
         }
         return foundMovies;
@@ -88,7 +88,7 @@ public class MovieService {
         for (Movie movie : movies) {
             MovieDTO movieDTO = movieEntityToDTO(movie);
             movieDTO.setFavoriteOfUsers(null);
-            movieDTO.setFavoriteOfUsers(null);
+            movieDTO.setRatedByUsers(null);
             foundMovies.add(movieDTO);
         }
         return foundMovies;
@@ -101,7 +101,7 @@ public class MovieService {
         for (Movie movie : movies) {
             MovieDTO movieDTO = movieEntityToDTO(movie);
             movieDTO.setFavoriteOfUsers(null);
-            movieDTO.setFavoriteOfUsers(null);
+            movieDTO.setRatedByUsers(null);
             foundMovies.add(movieDTO);
         }
         return foundMovies;
@@ -117,7 +117,7 @@ public class MovieService {
         for (Movie movie : movies) {
             MovieDTO movieDTO = movieEntityToDTO(movie);
             movieDTO.setFavoriteOfUsers(null);
-            movieDTO.setFavoriteOfUsers(null);
+            movieDTO.setRatedByUsers(null);
             foundMovies.add(movieDTO);
         }
         return foundMovies;
@@ -133,7 +133,7 @@ public class MovieService {
         for (Movie movie : movies) {
             MovieDTO movieDTO = movieEntityToDTO(movie);
             movieDTO.setFavoriteOfUsers(null);
-            movieDTO.setFavoriteOfUsers(null);
+            movieDTO.setRatedByUsers(null);
             foundMovies.add(movieDTO);
         }
         return foundMovies;
