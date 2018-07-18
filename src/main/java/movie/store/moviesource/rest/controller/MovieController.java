@@ -95,13 +95,11 @@ public class MovieController {
         return movies;
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(method = RequestMethod.POST)
     public Long addMovie(@RequestBody AddMovieCommand addMovie) {
         return movieService.addMovie(addMovie);
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void removeMovie(@PathVariable Long id) {
         movieService.deleteMovie(id);

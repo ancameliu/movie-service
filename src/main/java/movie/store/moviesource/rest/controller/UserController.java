@@ -46,13 +46,11 @@ public class UserController {
         userService.rateMovie(userId, movieId, rating);
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(method = RequestMethod.GET)
     public List<UserDTO> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    //@PreAuthorize("hasAnyRole('ADMIN')")
     @RequestMapping(value = "/favoritemovie/{movieId}", method = RequestMethod.GET)
     public List<UserDTO> getAllUsersWithFavoriteMovie(@PathVariable Long movieId) {
         List<UserDTO> users = userService.getAllUsersWithFavoriteMovie(movieId);
